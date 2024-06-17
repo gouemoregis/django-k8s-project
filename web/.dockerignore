@@ -1,8 +1,4 @@
-web/.env
 .DS_Store
-.kube/
-web/.env.prod
-note.md
 
 _pycache__/
 *.py[cod]
@@ -127,9 +123,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
-env/
+# env/
 venv/
 ENV/
 env.bak/
