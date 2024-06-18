@@ -22,7 +22,46 @@ kubectl delete secret django-k8s-web-prod-env
 kubectl create secret generic django-k8s-web-prod-env --from-env-file=web/.env.prod
 ```
 
-5. Update Deployment
+5. Update Deployment `k8s/apps/django-k8s-web.yaml`:
+
+Add in a roulout strategy:
+`imagePullPolicy: Always`
+
+
+### Four ways (given above) to trigger a deployment rollout (aka update the running pods):
+- Forced rollout
+Given a `imagePullPolicy: Always`, on your containers you can:
+
+```
+kubectl rollout restart deployment/django-k8s-web-deployment
+```
+
+- Image update:
+```
+kubectl set image deployment/django-k8s-web-deployment django-k8s-web=registry.digitalocean.com/regis-k8s/django-k8s-web:latest
+```
+
+- Update an Environment Variable (within deployment yaml):
+```
+env:
+    - name: Version
+      value: "abc123"
+    - name: PORT
+      value: "8002"
+```
+
+- Deployment yaml file update:
+
+Change
+```
+image: registry.digitalocean.com/regis-k8s/django-k8s-web:latest
+```
+to
+```
+image: registry.digitalocean.com/regis-k8s/django-k8s-web:v1
+```
+keep in mind you'll need to change `latest` to any new tag(s) you might have (not just v1)
+
 ```
 kubectl apply -f k8s/apps/django-k8s-web.yaml
 ```
@@ -45,4 +84,3 @@ Run the migrations
 ```
 kubectl exec -it $SINGLE_POD_NAME -- bash /app/migrate.sh
 ```
-
