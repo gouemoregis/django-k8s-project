@@ -6,14 +6,14 @@ python manage.py test
 2. Build container
 ```
 docker build -f Dockerfile \
-    -t registery.digitalocean.com/regis-k8s/django-k8s-web:latest \
-    -t registery.digitalocean.com/regis-k8s/django-k8s-web:v1 \
+    -t registry.digitalocean.com/regis-k8s/django-k8s-web:latest \
+    -t registry.digitalocean.com/regis-k8s/django-k8s-web:v1 \
     .
 ```
 
 3. Push this container to DO Container Registry with 2 tags: latest and random
 ```
-docker push registery.digitalocean.com/regis-k8s/django-k8s-web --all-tags
+docker push registry.digitalocean.com/regis-k8s/django-k8s-web --all-tags
 ```
 
 4. Update secrets (if needed)
