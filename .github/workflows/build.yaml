@@ -41,7 +41,7 @@ jobs:
         doctl kubernetes cluster kubeconfig save --expiry-seconds 600 ${{ env.CLUSTER_NAME }}
     - name: Update deployment image
       run: |
-        kubectl set image deployment/django-k8s-web-deployment django-k8s=registry.digitalocean.com/regis-k8s/django-k8s-web:${GITHUB_SHA::7}
+        kubectl set image deployment/django-k8s-web-deployment django-k8-web=registry.digitalocean.com/regis-k8s/django-k8s-web:${GITHUB_SHA::7}
     - name: Wait for rollout to finish
       run: |
         kubectl rollout status deployment/django-k8s-web-deployment
