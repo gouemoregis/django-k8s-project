@@ -11,10 +11,27 @@ on:
 jobs:
   test_django_job:
     uses: gouemoregis/django-k8s-project/.github/workflows/test-django.yaml@main
-  docker_build:
+  build:
     runs-on: ubuntu-latest
     needs: [test_django_job]
     env:
       DJANGO_SECRET_KEY: test-key
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DO_API_TOKEN_KEY }}
+    - name: Login to DO Container registry with short-lived creds
+      run: doctl registry login --expiry-seconds 1200
+    - name: Build container image 
+      working-directory: ./web
+      run: |
+        docker build -f Dockerfile \
+          -t registery.digitalocean.com/regis-k8s/django-k8s-web:latest \
+          -t registery.digitalocean.com/regis-k8s/django-k8s-web:${GITHUB_SHA::7} \
+          .
+    - name: Push image
+      run: |
+        docker push registery.digitalocean.com/regis-k8s/django-k8s-web --all-tags
